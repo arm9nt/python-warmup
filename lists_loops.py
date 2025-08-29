@@ -18,3 +18,14 @@ if __name__ == "__main__":
     assert sum_list(data) == 41
     assert filter_evens(data) == [8, 14, 10]
     print("OK")
+
+
+def max_in_list(nums: Iterable[int]) -> int:
+    it = iter(nums)
+    m = next(it)
+    for n in it:
+        if n > m:
+            m = n
+    return m
+
+assert max_in_list(data) == 14
