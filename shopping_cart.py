@@ -1,42 +1,25 @@
 from typing import Dict
 
 def calculate_total(cart: Dict[str, float]) -> float:
-    total = 0.0
-    for item, price in cart.items():
-        total += price
-    return total
-
-if __name__ == "__main__":
-    cart = {
-        "apple": 1.5,
-        "bread": 2.0,
-        "milk": 3.2,
-        "eggs": 4.0,
-    }
-
-    total = calculate_total(cart)
-    print("Cart:", cart)
-    print("Total:", total)
-    assert total == 10.7
-    print("OK")
-
+    return sum(cart.values())
 
 def apply_discount(cart: Dict[str, float], percent: float) -> Dict[str, float]:
     factor = (100 - percent) / 100
-    discounted = {}
+    discounted: Dict[str, float] = {}
     for item, price in cart.items():
         discounted[item] = round(price * factor, 2)
     return discounted
 
-
-def remove_item(cart: Dict[str, float], item: str) -> None:
+def remove_item(cart: Dict[str, float], item: str) -> bool:
     if item in cart:
         del cart[item]
-
+        return True
+    return False
 
 def most_expensive(cart: Dict[str, float]) -> str:
+    if not cart:
+        raise ValueError("Cart is empty")
     return max(cart, key=cart.get)
-
 
 if __name__ == "__main__":
     cart = {
@@ -46,11 +29,15 @@ if __name__ == "__main__":
         "eggs": 4.0,
     }
 
-    print("Total:", calculate_total(cart))
-    print("Most expensive:", most_expensive(cart))
+    # quick checks
+    assert calculate_total(cart) == 10.7
+    assert most_expensive(cart) == "eggs"
 
     discounted = apply_discount(cart, 10)
-    print("With 10% discount:", discounted)
+    assert discounted["apple"] == 1.35
 
-    remove_item(cart, "bread")
-    print("After removing bread:", cart)
+    removed = remove_item(cart, "bread")
+    assert removed is True
+    assert "bread" not in cart
+
+    print("OK")
