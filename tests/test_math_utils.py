@@ -1,5 +1,5 @@
 import pytest
-from math_utils import factorial, is_prime, fib
+from app.math_utils import factorial, is_prime, fib
 
 def test_factorial():
     assert factorial(0) == 1
