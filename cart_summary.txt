@@ -1,0 +1,4 @@
+apple: 1.50
+milk: 3.20
+eggs: 4.00
+TOTAL: 8.70

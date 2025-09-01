@@ -1,4 +1,5 @@
 from typing import Dict
+from pathlib import Path
 
 def calculate_total(cart: Dict[str, float]) -> float:
     return sum(cart.values())
@@ -21,6 +22,12 @@ def most_expensive(cart: Dict[str, float]) -> str:
         raise ValueError("Cart is empty")
     return max(cart, key=cart.get)
 
+def write_cart_summary(cart: Dict[str, float], path: str = "cart_summary.txt") -> None:
+    lines = [f"{item}: {price:.2f}" for item, price in cart.items()]
+    lines.append(f"TOTAL: {calculate_total(cart):.2f}")
+    Path(path).write_text("\n".join(lines), encoding="utf-8")
+
+
 if __name__ == "__main__":
     cart = {
         "apple": 1.5,
@@ -40,4 +47,10 @@ if __name__ == "__main__":
     assert removed is True
     assert "bread" not in cart
 
+    write_cart_summary(cart)
+    print("Wrote cart_summary.txt")
+
+
     print("OK")
+
+
