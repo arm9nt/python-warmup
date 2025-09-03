@@ -1,0 +1,25 @@
+# Virtual Environment
+.venv/
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+*.egg-info/
+dist/
+build/
+setup.py
+
+# Coverage reports
+.coverage
+htmlcov/
+
+# IDE settings
+.vscode/
+.idea/
+
+# Project specific
+structure.txt
