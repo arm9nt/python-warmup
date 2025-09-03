@@ -1,5 +1,9 @@
 from __future__ import annotations
 from typing import Dict
+from pathlib import Path
+import argparse
+import sys
+
 
 class ShoppingCart:
     def __init__(self) -> None:
@@ -10,7 +14,7 @@ class ShoppingCart:
             raise ValueError("Price must be >= 0")
         self.items[name] = price
 
-    def remove_item(self, name: str) ->bool:
+    def remove_item(self, name: str) -> bool:
         return self.items.pop(name, None) is not None
     
     def apply_discount(self, percent: float) -> None:
@@ -25,11 +29,43 @@ class ShoppingCart:
     
     def most_expensive(self) -> str:
         if not self.items:
-            return ValueError("Cart is empty")
+            raise ValueError("Cart is empty")
         return max(self.items, key=self.items.get)
     
     def to_file(self, path: str) -> None:
-        from pathlib import Path
         lines = [f"{k}: {v:.2f}" for k, v in self.items.items()]
-        lines.append(f"Total: {self.total():.2f}")
+        lines.append(f"TOTAL: {self.total():.2f}")
         Path(path).write_text("\n".join(lines), encoding="utf-8")
+
+
+def build_parser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(prog="python -m app.cart", description="ShoppingCart CLI")
+    p.add_argument("--add", nargs=2, metavar=("ITEM", "PRICE"), action="append",
+                help="Add item with price (can be repeated)")
+    p.add_argument("--remove", metavar="ITEM", help="Remove an item")
+    p.add_argument("--total", action="store_true", help="Show total")
+    return p
+
+
+def main(argv: list[str]) -> int:
+    parser = build_parser()
+    args = parser.parse_args(argv)
+
+    cart = ShoppingCart()
+
+    if args.add:
+        for name, price in args.add:
+            cart.add_item(name, float(price))
+            print(f"Added {name} at {price}")
+
+    if args.remove:
+        print("Removed" if cart.remove_item(args.remove) else "Not found")
+
+    if args.total:
+        print(f"Total: {cart.total():.2f}")  # Keep only this line
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv[1:]))
